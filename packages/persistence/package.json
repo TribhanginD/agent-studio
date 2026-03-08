@@ -1,0 +1,36 @@
+{
+    "name": "@agent-studio/persistence",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc --project tsconfig.json",
+        "dev": "tsc --watch --project tsconfig.json",
+        "clean": "rm -rf dist",
+        "test": "vitest run",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate",
+        "db:studio": "drizzle-kit studio"
+    },
+    "dependencies": {
+        "@agent-studio/shared": "workspace:*",
+        "drizzle-orm": "^0.38.0",
+        "postgres": "^3.4.0",
+        "uuid": "^11.0.0",
+        "zod": "^3.24.0"
+    },
+    "devDependencies": {
+        "@types/uuid": "^10.0.0",
+        "drizzle-kit": "^0.30.0",
+        "typescript": "^5.7.0",
+        "vitest": "^3.0.0"
+    }
+}

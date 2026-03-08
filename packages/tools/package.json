@@ -1,0 +1,32 @@
+{
+    "name": "@agent-studio/tools",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc --project tsconfig.json",
+        "dev": "tsc --watch --project tsconfig.json",
+        "clean": "rm -rf dist",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@agent-studio/shared": "workspace:*",
+        "zod": "^3.24.0",
+        "zod-to-json-schema": "^3.24.0",
+        "uuid": "^11.0.0",
+        "ioredis": "^5.4.0"
+    },
+    "devDependencies": {
+        "@types/uuid": "^10.0.0",
+        "typescript": "^5.7.0",
+        "vitest": "^3.0.0"
+    }
+}

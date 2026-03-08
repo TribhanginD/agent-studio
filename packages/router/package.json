@@ -1,0 +1,35 @@
+{
+    "name": "@agent-studio/router",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc --project tsconfig.json",
+        "dev": "tsc --watch --project tsconfig.json",
+        "clean": "rm -rf dist",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@agent-studio/shared": "workspace:*",
+        "@anthropic-ai/sdk": "^0.39.0",
+        "@google/generative-ai": "^0.24.0",
+        "gpt-tokenizer": "^2.8.0",
+        "openai": "^4.80.0",
+        "opossum": "^8.1.0",
+        "zod": "^3.24.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.0.0",
+        "@types/opossum": "^8.1.9",
+        "typescript": "^5.7.0",
+        "vitest": "^3.0.0"
+    }
+}

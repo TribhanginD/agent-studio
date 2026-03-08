@@ -1,0 +1,356 @@
+{
+    "annotations": {
+        "list": []
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 1,
+    "id": null,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "title": "Active Runs",
+            "type": "stat",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 0,
+                "y": 0
+            },
+            "targets": [
+                {
+                    "expr": "agent_studio_active_runs",
+                    "legendFormat": "Active"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "thresholds": {
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 5
+                            },
+                            {
+                                "color": "red",
+                                "value": 10
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "title": "Total Cost (24h)",
+            "type": "stat",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 4,
+                "y": 0
+            },
+            "targets": [
+                {
+                    "expr": "sum(increase(agent_studio_step_cost_usd_total[24h]))",
+                    "legendFormat": "USD"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "currencyUSD"
+                }
+            }
+        },
+        {
+            "title": "Token Throughput (5m)",
+            "type": "stat",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 8,
+                "y": 0
+            },
+            "targets": [
+                {
+                    "expr": "sum(rate(agent_studio_tokens_total[5m]))",
+                    "legendFormat": "tokens/s"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "ops"
+                }
+            }
+        },
+        {
+            "title": "Tool Call Success Rate",
+            "type": "gauge",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 12,
+                "y": 0
+            },
+            "targets": [
+                {
+                    "expr": "sum(rate(agent_studio_tool_calls_total{status='success'}[5m])) / sum(rate(agent_studio_tool_calls_total[5m]))",
+                    "legendFormat": "Success %"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percentunit",
+                    "min": 0,
+                    "max": 1,
+                    "thresholds": {
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 0.9
+                            },
+                            {
+                                "color": "green",
+                                "value": 0.95
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "title": "Step Duration by Agent Type",
+            "type": "timeseries",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 4
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.50, sum(rate(agent_studio_step_duration_seconds_bucket[5m])) by (le, agent_type))",
+                    "legendFormat": "p50 {{agent_type}}"
+                },
+                {
+                    "expr": "histogram_quantile(0.95, sum(rate(agent_studio_step_duration_seconds_bucket[5m])) by (le, agent_type))",
+                    "legendFormat": "p95 {{agent_type}}"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "s"
+                }
+            }
+        },
+        {
+            "title": "Cost by Model",
+            "type": "piechart",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 12,
+                "y": 4
+            },
+            "targets": [
+                {
+                    "expr": "sum by (model) (increase(agent_studio_step_cost_usd_total[24h]))",
+                    "legendFormat": "{{model}}"
+                }
+            ]
+        },
+        {
+            "title": "Model Selection Distribution",
+            "type": "barchart",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 18,
+                "y": 4
+            },
+            "targets": [
+                {
+                    "expr": "sum by (model) (increase(agent_studio_model_selections_total[24h]))",
+                    "legendFormat": "{{model}}"
+                }
+            ]
+        },
+        {
+            "title": "Tool Call Success/Failure",
+            "type": "timeseries",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 12
+            },
+            "targets": [
+                {
+                    "expr": "sum by (tool_name) (rate(agent_studio_tool_calls_total{status='success'}[5m]))",
+                    "legendFormat": "✓ {{tool_name}}"
+                },
+                {
+                    "expr": "sum by (tool_name) (rate(agent_studio_tool_calls_total{status='error'}[5m]))",
+                    "legendFormat": "✗ {{tool_name}}"
+                }
+            ]
+        },
+        {
+            "title": "Run Cost Distribution",
+            "type": "histogram",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 12,
+                "y": 12
+            },
+            "targets": [
+                {
+                    "expr": "agent_studio_run_total_cost_usd_bucket",
+                    "legendFormat": "{{le}}"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "currencyUSD"
+                }
+            }
+        },
+        {
+            "title": "Circuit Breaker State",
+            "type": "state-timeline",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 18,
+                "y": 12
+            },
+            "targets": [
+                {
+                    "expr": "agent_studio_circuit_breaker_state",
+                    "legendFormat": "{{provider}}"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "mappings": [
+                        {
+                            "type": "value",
+                            "options": {
+                                "0": {
+                                    "text": "Closed",
+                                    "color": "green"
+                                },
+                                "1": {
+                                    "text": "Half-Open",
+                                    "color": "yellow"
+                                },
+                                "2": {
+                                    "text": "Open",
+                                    "color": "red"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "title": "Orchestration Overhead",
+            "type": "timeseries",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 20
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.50, sum(rate(agent_studio_orchestration_overhead_seconds_bucket[5m])) by (le))",
+                    "legendFormat": "p50"
+                },
+                {
+                    "expr": "histogram_quantile(0.99, sum(rate(agent_studio_orchestration_overhead_seconds_bucket[5m])) by (le))",
+                    "legendFormat": "p99"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "s"
+                }
+            }
+        }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 39,
+    "tags": [
+        "agent-studio",
+        "observability"
+    ],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-1h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "title": "Agent Studio — Orchestration Dashboard",
+    "uid": "agent-studio-main",
+    "version": 1
+}

@@ -1,0 +1,39 @@
+{
+    "name": "@agent-studio/temporal-workflows",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./workflows": {
+            "types": "./dist/workflows/index.d.ts",
+            "import": "./dist/workflows/index.js"
+        },
+        "./activities": {
+            "types": "./dist/activities/index.d.ts",
+            "import": "./dist/activities/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc --project tsconfig.json",
+        "dev": "tsc --watch --project tsconfig.json",
+        "clean": "rm -rf dist",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@agent-studio/shared": "workspace:*",
+        "@temporalio/workflow": "^1.11.0",
+        "@temporalio/activity": "^1.11.0",
+        "@temporalio/client": "^1.11.0",
+        "@temporalio/worker": "^1.11.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.7.0",
+        "vitest": "^3.0.0"
+    }
+}
